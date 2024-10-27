@@ -1,5 +1,6 @@
-package com.scheduler.scheduler;
+package com.scheduler.scheduler.Jasypt;
 
+import com.scheduler.scheduler.Jasypt.JasyptConfig;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

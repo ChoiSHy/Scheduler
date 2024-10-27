@@ -1,4 +1,4 @@
-package com.scheduler.scheduler;
+package com.scheduler.scheduler.Jasypt;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.StringEncryptor;

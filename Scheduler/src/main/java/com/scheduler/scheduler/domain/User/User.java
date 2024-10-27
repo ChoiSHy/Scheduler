@@ -1,6 +1,7 @@
 package com.scheduler.scheduler.domain.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.scheduler.scheduler.domain.ToDo.ToDo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,9 +25,10 @@ public class User implements UserDetails {
     private String password;    // 로그인 비밀번호
     @Column(nullable = false)
     private String name;    // 사용자 이름
-
     @Enumerated(EnumType.STRING)
     private Role role;  // 역할 -> 사용 권한
+    @OneToMany
+    private List<ToDo> todoList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

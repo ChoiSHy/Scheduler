@@ -1,6 +1,6 @@
-package com.scheduler.scheduler;
+package com.scheduler.scheduler.Jasypt;
 
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import com.scheduler.scheduler.Jasypt.JasyptConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -16,12 +15,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         initializers = ConfigDataApplicationContextInitializer.class,
         classes = JasyptConfig.class)
 public class ReadJasyptConfigTest {
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
     @Value("${spring.datasource.password}")
-    private String decryptedData;
+    private String password;
 
     @Test
+    @DisplayName("db정보 복호화 확인")
     void decryption_config_test(){
-        System.out.println("decryption_config: "+decryptedData);
-        Assertions.assertEquals(decryptedData, "db_password");
+        System.out.println("url: "+url);
+        System.out.println("username: "+username);
+        System.out.println("password: "+password);
+
+        Assertions.assertEquals(username, "root");
     }
 }

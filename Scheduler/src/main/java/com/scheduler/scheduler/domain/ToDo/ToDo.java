@@ -1,9 +1,7 @@
 package com.scheduler.scheduler.domain.ToDo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.scheduler.scheduler.domain.User.User;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -17,12 +15,16 @@ import java.util.UUID;
 public class ToDo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
-    @NotNull
-    String comment;
-    @NotNull
+    private UUID id;
+    @Column(nullable = false)
+    private String comment;
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "YYYY-MM-DD")
-    Date dueDate;
-
+    private Date dueDate;
+    @Column(nullable = false)
+    private Boolean isDone;
+    @ManyToOne
+    @NotNull
+    private User user;
 
 }
