@@ -9,14 +9,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableEncryptableProperties
-public class JasyptConfigAES {
-    @Bean("jasyptEncryptorAES")
-    public StringEncryptor stringEncryptor() {
+public class JasyptConfig {
+    @Bean
+    public StringEncryptor jasyptStringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
 
-        config.setPassword("sample-key"); // 암호화키
-        config.setAlgorithm("PBEWITHHMACSHA512ANDAES_256"); // 알고리즘
+        config.setPassword("sample"); // 암호화 키
+        config.setAlgorithm("PBEWithMD5AndDES"); // 알고리즘
         config.setKeyObtentionIterations("1000"); // 반복할 해싱 회수
         config.setPoolSize("1"); // 인스턴스 pool
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator"); // salt 생성 클래스
