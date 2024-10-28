@@ -27,12 +27,15 @@ public class User implements UserDetails {
     private String uid; // 로그인 아이디
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
+    @ToString.Exclude
     private String password;    // 로그인 비밀번호
     @Column(nullable = false)
     private String name;    // 사용자 이름
     @Enumerated(EnumType.STRING)
     private Role role;  // 역할 -> 사용 권한
     @OneToMany
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private List<ToDo> todoList;
 
     @Override
