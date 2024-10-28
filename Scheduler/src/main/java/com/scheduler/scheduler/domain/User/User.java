@@ -2,18 +2,23 @@ package com.scheduler.scheduler.domain.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scheduler.scheduler.domain.ToDo.ToDo;
+import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +47,11 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return this.uid;
+    }
+
+    public UserCreateResponseDto toCreateResponseDto(){
+        return UserCreateResponseDto.builder()
+                .name(name)
+                .build();
     }
 }
