@@ -3,6 +3,7 @@ package com.scheduler.scheduler.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scheduler.scheduler.domain.ToDo.ToDo;
 import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
+import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,5 +57,8 @@ public class User implements UserDetails {
         return UserCreateResponseDto.builder()
                 .name(name)
                 .build();
+    }
+    public UserResponseDto toResponseDto(){
+        return new UserResponseDto(name, uid);
     }
 }
