@@ -1,4 +1,4 @@
-package com.scheduler.scheduler.domain.ToDo;
+package com.scheduler.scheduler.domain.Todo;
 
 import com.scheduler.scheduler.domain.User.User;
 import com.scheduler.scheduler.presentation.dto.todo.TodoResponseDto;

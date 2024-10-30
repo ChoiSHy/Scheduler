@@ -1,6 +1,6 @@
 package com.scheduler.scheduler.presentation.dto.todo;
 
-import com.scheduler.scheduler.domain.ToDo.Todo;
+import com.scheduler.scheduler.domain.Todo.Todo;
 
 import java.util.Date;
 

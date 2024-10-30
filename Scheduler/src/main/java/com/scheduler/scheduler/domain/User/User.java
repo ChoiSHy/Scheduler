@@ -1,7 +1,7 @@
 package com.scheduler.scheduler.domain.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.scheduler.scheduler.domain.ToDo.Todo;
+import com.scheduler.scheduler.domain.Todo.Todo;
 import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
 import jakarta.persistence.*;
