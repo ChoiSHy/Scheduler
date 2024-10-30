@@ -1,7 +1,7 @@
 package com.scheduler.scheduler.domain.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.scheduler.scheduler.domain.ToDo.ToDo;
+import com.scheduler.scheduler.domain.ToDo.Todo;
 import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
 import jakarta.persistence.*;
@@ -37,18 +37,15 @@ public class User implements UserDetails {
     @OneToMany
     @JoinColumn(name = "user_id")
     @ToString.Exclude
-    private List<ToDo> todoList;
+    private List<Todo> todoList;
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
     }
-    @Override
     public String getPassword() {
         return null;
     }
 
-    @Override
     public String getUsername() {
         return this.uid;
     }

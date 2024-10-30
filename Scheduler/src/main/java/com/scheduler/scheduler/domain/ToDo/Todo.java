@@ -1,9 +1,11 @@
 package com.scheduler.scheduler.domain.ToDo;
 
 import com.scheduler.scheduler.domain.User.User;
+import com.scheduler.scheduler.presentation.dto.todo.TodoResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,7 +15,9 @@ import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
-public class ToDo {
+@AllArgsConstructor
+@Builder
+public class Todo {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -29,4 +33,14 @@ public class ToDo {
     @NotNull
     private User user;
 
+
+    public TodoResponseDto toResponseDto(){
+        return TodoResponseDto.builder()
+                .id(id)
+                .dueDate(dueDate)
+                .isDone(isDone)
+                .comment(comment)
+                .user_name(user.getUsername())
+                .build();
+    }
 }

@@ -1,6 +1,6 @@
 package com.scheduler.scheduler.presentation.controller;
 
-import com.scheduler.scheduler.application.UserDetailService;
+import com.scheduler.scheduler.application.UserService;
 import com.scheduler.scheduler.presentation.dto.user.request.UserCreateRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController(value = "/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserDetailService userDetailService;
+    private final UserService userDetailService;
     private final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping(value = "/register")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public UserCreateResponseDto register(@RequestBody UserCreateRequestDto requestDto){
         UserCreateResponseDto responseDto = userDetailService.saveUser(requestDto);
         return responseDto;

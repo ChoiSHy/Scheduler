@@ -1,8 +1,9 @@
 package com.scheduler.scheduler.application;
 
+import com.scheduler.scheduler.application.impl.UserServiceImpl;
 import com.scheduler.scheduler.domain.User.Role;
 import com.scheduler.scheduler.domain.User.User;
-import com.scheduler.scheduler.infrastructure.UserRepository;
+import com.scheduler.scheduler.infrastructure.repository.UserRepository;
 import com.scheduler.scheduler.presentation.dto.user.request.UserCreateRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
@@ -17,20 +18,18 @@ import org.slf4j.LoggerFactory;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class UserDetailServiceTest {
     private UserRepository userRepository = Mockito.mock(UserRepository.class);
-    private UserDetailService userDetailService;
+    private UserService userDetailService;
     private Logger LOGGER = LoggerFactory.getLogger(UserDetailServiceTest.class);
 
     @BeforeEach
     public void setup() {
-        userDetailService = new UserDetailService(userRepository);
+        userDetailService = new UserServiceImpl(userRepository);
     }
 
     @Test

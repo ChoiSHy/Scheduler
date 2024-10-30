@@ -1,7 +1,8 @@
-package com.scheduler.scheduler.application;
+package com.scheduler.scheduler.application.impl;
 
+import com.scheduler.scheduler.application.UserService;
 import com.scheduler.scheduler.domain.User.User;
-import com.scheduler.scheduler.infrastructure.UserRepository;
+import com.scheduler.scheduler.infrastructure.repository.UserRepository;
 import com.scheduler.scheduler.presentation.dto.user.request.UserCreateRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
 import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +18,15 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserDetailService implements UserDetailsService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final Logger LOGGER = LoggerFactory.getLogger(UserDetailService.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         return null;
     }
+
 
     public UserCreateResponseDto saveUser(UserCreateRequestDto requestDto) {
         LOGGER.info("[UserDetailService - saveUser] : ** START **");
