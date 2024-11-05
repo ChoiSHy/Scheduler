@@ -1,4 +1,4 @@
-package com.scheduler.scheduler.infrastructure.config.security;
+package com.scheduler.scheduler.presentation.dto.sign;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EntryPointErrorResponse {
-    private String msg;
+public class SignUpResultDto {
+    private boolean success;
+    private int code;
+    private String message;
 }

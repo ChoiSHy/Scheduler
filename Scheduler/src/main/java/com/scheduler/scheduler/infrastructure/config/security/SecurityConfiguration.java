@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,7 +25,10 @@ public class SecurityConfiguration {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/sign-api/sing-in", "sign-api/sign-up", "sign-api/exception").permitAll() // 패턴 해당 요청 모두 허용
+                        .requestMatchers(
+                                "/sign-api/sing-in",
+                                "sign-api/sign-up",
+                                "sign-api/exception").permitAll() // 패턴 해당 요청 모두 허용
                         .requestMatchers(HttpMethod.POST, "/user/**").permitAll()   // POST: /user/** 모두 허용
                         .requestMatchers("**exception**").permitAll()   // **exception** 모두 허용
                         .anyRequest().hasRole("ADMIN"));    // 기타요청 -> ADMIN
@@ -39,8 +43,15 @@ public class SecurityConfiguration {
         return httpSecurity.build();
     }
     @Bean
-    public void configure(WebSecurity webSecurity){
-        webSecurity.ignoring().requestMatchers("/v2/api-docs", "/swagger-resources/**");
-
+    public WebSecurityCustomizer webSecurityConfigure(){
+        return (web)->web.ignoring()
+                .requestMatchers(
+                        "/v2/api-docs",
+                        "/swagger/resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "swagger/**",
+                        "/sign-api/exception"
+                );
     }
 }

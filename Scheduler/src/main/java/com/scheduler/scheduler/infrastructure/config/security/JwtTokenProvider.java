@@ -29,6 +29,7 @@ public class JwtTokenProvider {
     private String secretKey = "secretKey";
     private SecretKey key;
     private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
+    private final Long expiredTime = 1000L * 60 * 60;
     private final UserDetailsService userDetailsService; // Spring Security 에서 제공하는 서비스 레이어
 
     // SecretKey 에 대해 인코딩 수행
@@ -41,7 +42,7 @@ public class JwtTokenProvider {
 
 
     // JWT 토큰 생성
-    public String createToken(String userUid, Role role, Long expiredTime) {
+    public String createToken(String userUid, Role role) {
         LOGGER.info("[createToken] 토큰 생성 시작");
         Claims claims = Jwts.claims().build();
         claims.put("userId", userUid);

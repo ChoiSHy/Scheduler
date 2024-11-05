@@ -58,4 +58,16 @@ public class User implements UserDetails {
     public UserResponseDto toResponseDto(){
         return new UserResponseDto(name, uid);
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
