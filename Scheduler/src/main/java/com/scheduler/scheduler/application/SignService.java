@@ -1,9 +1,12 @@
 package com.scheduler.scheduler.application;
 
+import com.scheduler.scheduler.presentation.dto.sign.SignInRequestDto;
 import com.scheduler.scheduler.presentation.dto.sign.SignInResultDto;
+import com.scheduler.scheduler.presentation.dto.sign.SignUpRequestDto;
 import com.scheduler.scheduler.presentation.dto.sign.SignUpResultDto;
 
 public interface SignService {
-    SignUpResultDto signUp(String id, String password, String name, String role);
-    SignInResultDto signIn(String id, String password) throws RuntimeException;
+    SignUpResultDto signUp(SignUpRequestDto requestDto);
+
+    SignInResultDto signIn(SignInRequestDto requestDto) throws RuntimeException;
 }
