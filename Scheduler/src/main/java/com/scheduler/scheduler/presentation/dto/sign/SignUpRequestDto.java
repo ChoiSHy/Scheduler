@@ -11,11 +11,10 @@ public class SignUpRequestDto {
     private String password;
     private String name;
 
-    public User toUser(PasswordEncoder passwordEncoder){
+    public User toUser( ){
         User user = User.builder()
                 .uid(id)
                 .name(name)
-                .password(passwordEncoder.encode(password))
                 .role(Role.USER)
                 .build();
         return user;

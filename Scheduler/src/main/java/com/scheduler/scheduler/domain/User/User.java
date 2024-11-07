@@ -102,4 +102,7 @@ public class User implements UserDetails {
         return true;
         //return UserDetails.super.isEnabled();
     }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
