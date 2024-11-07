@@ -39,23 +39,23 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<Todo> todoList;
 
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
-    }
+
     public String getPassword() {
         return null;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getUsername() {
         return this.uid;
     }
 
-    public UserCreateResponseDto toCreateResponseDto(){
+    public UserCreateResponseDto toCreateResponseDto() {
         return UserCreateResponseDto.builder()
                 .name(name)
                 .build();
     }
-    public UserResponseDto toResponseDto(){
+
+    public UserResponseDto toResponseDto() {
         return new UserResponseDto(name, uid);
     }
 
@@ -69,5 +69,37 @@ public class User implements UserDetails {
 
     public String getName() {
         return name;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+        //return UserDetails.super.isAccountNonExpired();
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+        //return UserDetails.super.isAccountNonLocked();
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+        //return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isEnabled() {
+        return true;
+        //return UserDetails.super.isEnabled();
     }
 }

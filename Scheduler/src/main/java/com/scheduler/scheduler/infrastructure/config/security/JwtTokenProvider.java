@@ -1,4 +1,5 @@
 package com.scheduler.scheduler.infrastructure.config.security;
+
 import com.scheduler.scheduler.domain.User.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -22,24 +23,30 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.*;
+
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${springboot.jwt.secret}")
-    private String secretKey = "secretKey";
-    private SecretKey key;
-    private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
-    private final Long expiredTime = 1000L * 60 * 60;
     private final UserDetailsService userDetailsService; // Spring Security 에서 제공하는 서비스 레이어
+    private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
+
+
+    @Value("${springboot.jwt.secret}")
+    private String secretKey = "secretKey-length-longer-than-32";
+    private SecretKey key;
+    private final Long expiredTime = 1000L * 60 * 60;
 
     // SecretKey 에 대해 인코딩 수행
     @PostConstruct
     protected void init() {
         LOGGER.info("[init] JwtTokenProvider 내 secretKey 초기화 시작");
-        key=Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        if(secretKey == null || secretKey.length()<32)
+            throw new IllegalArgumentException("JWT Secret Key must be at least 32 characters long");
+
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+        key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         LOGGER.info("[init] JwtTokenProvider 내 secretKey 초기화 완료");
     }
-
 
     // JWT 토큰 생성
     public String createToken(String userUid, Role role) {

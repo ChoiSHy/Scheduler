@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        return null;
+    public UserDetails loadUserByUsername(String username) {
+        LOGGER.info("[loadUserByUsername] loadUserByUsername 수행. id: {}",username);
+        return userRepository.getByUid(username);
     }
 
 
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     public UserResponseDto getUserById(Long id) {
         LOGGER.info("[UserDetailService - getUserById] : ** START **");
-        Optional<User> optional = userRepository.findUserById(id);
+        Optional<User> optional = userRepository.findById(id);
         User foundUser=null;
         UserResponseDto responseDto=null;
         try {

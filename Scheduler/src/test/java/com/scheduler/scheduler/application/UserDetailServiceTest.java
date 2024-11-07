@@ -44,7 +44,7 @@ class UserDetailServiceTest {
     @Test
     void getUserById() {
         LOGGER.info("**** [getUserById] ****");
-        Mockito.when(userRepository.findUserById(1L))
+        Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(User.builder()
                         .id(1L)
                         .uid("test-id")
@@ -61,7 +61,7 @@ class UserDetailServiceTest {
     @Test
     @DisplayName("getUserById - cannot find user")
     void getUserById_exceptionTest() {
-        Mockito.when(userRepository.findUserById(2L))
+        Mockito.when(userRepository.findById(2L))
                 .thenReturn(Optional.ofNullable(null));
         Assertions.assertThrows(NoSuchElementException.class, () -> userDetailService.getUserById(2L));
     }
