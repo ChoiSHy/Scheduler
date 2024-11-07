@@ -4,9 +4,7 @@ import com.scheduler.scheduler.application.impl.UserServiceImpl;
 import com.scheduler.scheduler.domain.User.Role;
 import com.scheduler.scheduler.domain.User.User;
 import com.scheduler.scheduler.infrastructure.repository.UserRepository;
-import com.scheduler.scheduler.presentation.dto.user.request.UserCreateRequestDto;
-import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
-import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
+import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -30,15 +27,6 @@ class UserDetailServiceTest {
     @BeforeEach
     public void setup() {
         userDetailService = new UserServiceImpl(userRepository);
-    }
-
-    @Test
-    void saveUser() {
-        LOGGER.info("**** [saveUser] ****");
-        Mockito.when(userRepository.save(any(User.class))).then(returnsFirstArg());
-
-        UserCreateResponseDto savedUserDto = userDetailService.saveUser(new UserCreateRequestDto("id", "password", "myName"));
-        Assertions.assertEquals(savedUserDto.getName(), "myName");
     }
 
     @Test

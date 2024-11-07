@@ -1,6 +1,6 @@
 package com.scheduler.scheduler.Jasypt;
 
-import com.scheduler.scheduler.infrastructure.config.Jasypt.JasyptConfig;
+import com.scheduler.scheduler.infrastructure.config.JasyptConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

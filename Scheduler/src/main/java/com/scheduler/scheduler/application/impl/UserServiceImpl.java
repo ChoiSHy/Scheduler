@@ -3,14 +3,11 @@ package com.scheduler.scheduler.application.impl;
 import com.scheduler.scheduler.application.UserService;
 import com.scheduler.scheduler.domain.User.User;
 import com.scheduler.scheduler.infrastructure.repository.UserRepository;
-import com.scheduler.scheduler.presentation.dto.user.request.UserCreateRequestDto;
-import com.scheduler.scheduler.presentation.dto.user.response.UserCreateResponseDto;
-import com.scheduler.scheduler.presentation.dto.user.response.UserResponseDto;
+import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -25,19 +22,6 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) {
         LOGGER.info("[loadUserByUsername] loadUserByUsername 수행. id: {}",username);
         return userRepository.getByUid(username);
-    }
-
-
-    public UserCreateResponseDto saveUser(UserCreateRequestDto requestDto) {
-        LOGGER.info("[UserDetailService - saveUser] : ** START **");
-        User requestedUser = requestDto.toEntity();
-        LOGGER.info("[UserDetailService - saveUser] : toEntity() = " + requestedUser);
-        User savedUser = userRepository.save(requestedUser);
-        LOGGER.info("[UserDetailService - saveUser] : save() = " + savedUser);
-        UserCreateResponseDto savedUserDto = savedUser.toCreateResponseDto();
-        LOGGER.info("[UserDetailService - saveUser] : toCreateResponseDto() = " + savedUserDto);
-        LOGGER.info("[UserDetailService - saveUser] : ** DONE **");
-        return savedUserDto;
     }
 
     public UserResponseDto getUserById(Long id) {

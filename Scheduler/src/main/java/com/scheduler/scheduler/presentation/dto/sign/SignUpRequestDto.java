@@ -2,10 +2,12 @@ package com.scheduler.scheduler.presentation.dto.sign;
 
 import com.scheduler.scheduler.domain.User.Role;
 import com.scheduler.scheduler.domain.User.User;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
+@Builder
 public class SignUpRequestDto {
     private String id;
     private String password;
@@ -18,5 +20,9 @@ public class SignUpRequestDto {
                 .role(Role.USER)
                 .build();
         return user;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

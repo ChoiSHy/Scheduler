@@ -1,4 +1,4 @@
-package com.scheduler.scheduler.presentation.dto.user.response;
+package com.scheduler.scheduler.presentation.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
