@@ -51,7 +51,7 @@ public class JwtTokenProvider {
     // JWT 토큰 생성
     public String createToken(String userUid, Role role) {
         LOGGER.info("[createToken] 토큰 생성 시작");
-        Claims claims = Jwts.claims().build();
+        Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userUid);
         claims.put("role", role);
 

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,11 +37,6 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<Todo> todoList;
 
-
-    public String getPassword() {
-        return null;
-    }
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getUsername() {
         return this.uid;
@@ -64,6 +60,11 @@ public class User implements UserDetails {
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

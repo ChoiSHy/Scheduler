@@ -8,9 +8,11 @@ import com.scheduler.scheduler.infrastructure.repository.UserRepository;
 import com.scheduler.scheduler.presentation.controller.SignController;
 import com.scheduler.scheduler.presentation.dto.sign.SignUpRequestDto;
 import com.scheduler.scheduler.presentation.dto.sign.SignUpResultDto;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,12 +51,12 @@ class SignServiceImplTest {
                 .build();
 
         String pw = "test_password";
-
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
         User user = requestDto.toUser();
         System.out.println(user);
-        System.out.println(passwordEncoder);
+
+        Assertions.assertTrue(user.passwordMatch(pw, passwordEncoder));
     }
 
     @Test

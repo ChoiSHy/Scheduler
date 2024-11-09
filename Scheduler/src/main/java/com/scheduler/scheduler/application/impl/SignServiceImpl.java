@@ -55,12 +55,15 @@ public class SignServiceImpl implements SignService {
 
         LOGGER.info("[signIn] signDataHandler 로 회원 정보 요청");
         User user = userRepository.getByUid(id);
-        LOGGER.info("[signIn] ID: {}", user.getUid());
         LOGGER.info("[signIn] user: {}", user);
 
         LOGGER.info("[signIn] 패스워드 비교 수행");
-        if (!passwordEncoder.matches(password, user.getPassword()))
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            LOGGER.info("[signIn] raw pw: {}", password);
+            LOGGER.info("[signIn] raw enc: {}", passwordEncoder.encode(password));
+            LOGGER.info("[signIn] encoded: {}", user.getPassword());
             throw new IncorrectSignInException();
+        }
         LOGGER.info("[signIn] 패스워드 일치");
 
         LOGGER.info("[signIn] SignInResultDto 객체 생성");

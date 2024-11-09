@@ -13,10 +13,11 @@ public class SignUpRequestDto {
     private String password;
     private String name;
 
-    public User toUser( ){
+    public User toUser() {
         User user = User.builder()
                 .uid(id)
                 .name(name)
+                .password(password)
                 .role(Role.USER)
                 .build();
         return user;
