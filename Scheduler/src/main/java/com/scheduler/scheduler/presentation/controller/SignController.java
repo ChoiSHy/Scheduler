@@ -3,6 +3,7 @@ package com.scheduler.scheduler.presentation.controller;
 import com.scheduler.scheduler.application.SignService;
 import com.scheduler.scheduler.domain.exception.InaccessibleException;
 import com.scheduler.scheduler.presentation.dto.sign.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +26,18 @@ public class SignController {
 
     @PostMapping(value = "/sign-in")
     public SignInResultDto signIn(@RequestBody SignInRequestDto requestDto) throws InaccessibleException{
-        LOGGER.info("[signIn] 로그인을 시도하고 있습니다. id: {}, pw: ****", requestDto.getId());
+        LOGGER.info("[signIn] 로그인을 시도하고 있습니다. id: {}, pw: ****", requestDto.getEmail());
         SignInResultDto signInResultDto = signService.signIn(requestDto);
         if (signInResultDto.getCode() == 0){
-            LOGGER.info("[signIn] 정상적으로 로그인되었습니다. id: {}, token: {}", requestDto.getId(),signInResultDto.getToken());
+            LOGGER.info("[signIn] 정상적으로 로그인되었습니다. id: {}, token: {}", requestDto.getEmail(),signInResultDto.getToken());
         }
         return signInResultDto;
     }
     @PostMapping(value = "/sign-up")
-    public SignUpResultDto signUp(@RequestBody SignUpRequestDto requestDto){
+    public SignUpResultDto signUp(@RequestBody @Valid SignUpRequestDto requestDto){
         SignUpResultDto resultDto = signService.signUp(requestDto);
 
-        LOGGER.info("[signUp] 회원가입을 완료했습니다. id: {}",requestDto.getId());
+        LOGGER.info("[signUp] 회원가입을 완료했습니다. id: {}",requestDto.getEmail());
 
         return resultDto;
     }

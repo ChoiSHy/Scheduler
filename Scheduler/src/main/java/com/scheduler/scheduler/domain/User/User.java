@@ -1,9 +1,12 @@
 package com.scheduler.scheduler.domain.User;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scheduler.scheduler.domain.Todo.Todo;
 import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,13 +29,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    // DB상 주키
     @Column(nullable = false, unique = true)
-    private String uid; // 로그인 아이디
+
+    private String email; // 로그인 아이디
+
     @Column(nullable = false)
+
     private String password;    // 로그인 비밀번호
     @Column(nullable = false)
     private String name;    // 사용자 이름
     @Enumerated(EnumType.STRING)
     private Role role;  // 역할 -> 사용 권한
+    @Column(nullable = true)
+    private Date birthDate;
     @OneToMany
     @JoinColumn(name = "user_id")
     @ToString.Exclude
@@ -39,19 +48,23 @@ public class User implements UserDetails {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getUsername() {
-        return this.uid;
+        return this.email;
     }
 
     public UserResponseDto toResponseDto() {
-        return new UserResponseDto(name, uid);
+        return UserResponseDto.builder()
+                .email(email)
+                .name(name)
+                .birthDate(birthDate)
+                .build();
     }
 
     public Role getRole() {
         return role;
     }
 
-    public String getUid() {
-        return uid;
+    public String getEmail() {
+        return email;
     }
 
     public String getName() {

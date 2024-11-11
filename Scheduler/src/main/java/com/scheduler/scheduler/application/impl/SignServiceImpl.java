@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -29,11 +30,13 @@ public class SignServiceImpl implements SignService {
     private final PasswordEncoder passwordEncoder;
 
     public SignUpResultDto signUp(SignUpRequestDto requestDto) {
+        LOGGER.info("[signUp] email 중복여부 확인");
+        
         LOGGER.info("[signUp] 회원 가입 정보 전달");
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User user = requestDto.toUser();
         LOGGER.info("[signUp] user: {}", user);
-
+        
         User savedUser = userRepository.save(user);
         SignUpResultDto signUpResultDto = new SignUpResultDto();
 
@@ -50,13 +53,13 @@ public class SignServiceImpl implements SignService {
 
     @Override
     public SignInResultDto signIn(SignInRequestDto requestDto) throws RuntimeException {
-        String id = requestDto.getId();
+        String email = requestDto.getEmail();
         String password = requestDto.getPassword();
         User user = null;
-        LOGGER.info("[signIn] signDataHandler 로 회원 정보 요청. id: {}", id);
+        LOGGER.info("[signIn] signDataHandler 로 회원 정보 요청. email: {}", email);
 
 
-        user = userRepository.findByUid(id)
+        user = userRepository.findByEmail(email)
                 .orElseThrow(()->{
                     LOGGER.error("[signIn] 해당 유저 정보를 찾을 수 없습니다.");
                     throw new NoSuchElementException("해당 유저 정보를 찾을 수 없습니다.");});
@@ -72,7 +75,7 @@ public class SignServiceImpl implements SignService {
         LOGGER.info("[signIn] SignInResultDto 객체 생성");
         SignInResultDto signInResultDto = SignInResultDto.builder()
                 .token(jwtTokenProvider.createToken(
-                        String.valueOf(user.getUid()),
+                        String.valueOf(user.getEmail()),
                         user.getRole()))
                 .build();
 

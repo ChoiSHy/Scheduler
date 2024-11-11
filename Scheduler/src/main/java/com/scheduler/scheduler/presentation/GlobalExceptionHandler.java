@@ -16,7 +16,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = InaccessibleException.class)
     public ResponseEntity<ExceptionMessage> InaccessibleExceptionHandler(InaccessibleException e) {
         LOGGER.error("ExceptionHandler 호출, {}, {}", e.getCause(), e.getMessage());
-        return generateResponseEntity();
+        return ResponseEntity
+                .status(401)
+                .body(new ExceptionMessage(
+                        HttpStatus.BAD_REQUEST.getReasonPhrase(), "400",e.getMessage()));
     }
 
     @ExceptionHandler(value = IncorrectSignInException.class)

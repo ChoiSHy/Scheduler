@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Date;
+
 @AllArgsConstructor
+@Builder
 @Getter
 public class UserResponseDto {
     String name;
-    String uid;
-
+    String email;
+    Date birthDate;
 }

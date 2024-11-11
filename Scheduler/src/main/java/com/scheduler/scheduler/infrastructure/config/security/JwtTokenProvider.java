@@ -1,10 +1,8 @@
 package com.scheduler.scheduler.infrastructure.config.security;
 
+import com.scheduler.scheduler.application.UserService;
 import com.scheduler.scheduler.domain.User.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +25,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final UserDetailsService userDetailsService; // Spring Security 에서 제공하는 서비스 레이어
+    private final UserService userService; // Spring Security 에서 제공하는 서비스 레이어
     private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
 
@@ -62,7 +60,7 @@ public class JwtTokenProvider {
                 .claims(claims)
                 .issuedAt(Date.from(now.toInstant()))
                 .expiration(Date.from(tokenValidity.toInstant()))
-                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret 값 세팅
+                .signWith(SignatureAlgorithm.HS256, key) // 암호화 알고리즘, secret 값 세팅
                 .compact();
 
         LOGGER.info("[createToken] 토큰 생성 완료");
@@ -72,19 +70,20 @@ public class JwtTokenProvider {
     // JWT 토큰으로 인증 정보 조회
     public Authentication getAuthentication(String token) {
         LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 시작");
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUsername(token));
+        String username = this.getUsername(token);
+        LOGGER.info("[getAuthentication] 회원정보: {}", username);
+        UserDetails userDetails = userService.loadUserByUsername(username);
         LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 완료, UserDetails UserName : {}", userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // JWT 토큰에서 회원 구별 정보 추출
     public String getUsername(String token) {
-        LOGGER.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
-        String info = Jwts.parser()
+        LOGGER.info("[getUsername] 토큰 기반 회원 구별 정보 추출. token: {}",token);
+        Claims claims = Jwts.parser()
                 .verifyWith(key).build()
-                .parseSignedClaims(token)
-                .getBody()
-                .getSubject();
+                .parseSignedClaims(token).getPayload();
+        String info = claims.get("userId").toString();
         LOGGER.info("[getUsername] 토큰 기반 회원 구별 정보 추출 완료, info : {}", info);
         return info;
     }
@@ -103,16 +102,29 @@ public class JwtTokenProvider {
     // JWT 토큰의 유효성 + 만료일 체크
     public boolean validateToken(String token) {
         LOGGER.info("[validateToken] 토큰 유효 체크 시작");
+        if(token == null) return false;
+
         try {
             Jws<Claims> claims = Jwts.parser()
                     .verifyWith(key).build()
                     .parseSignedClaims(token);
+            boolean ret = !claims.getBody().getExpiration().before(new Date());
             LOGGER.info("[validateToken] 토큰 유효 체크 완료");
-            return !claims.getBody()
-                    .getExpiration()
-                    .before(new Date());
-        } catch (Exception e) {
-            LOGGER.info("[validateToken] 토큰 유효 체크 예외 발생");
+            return ret;
+        }catch (io.jsonwebtoken.security.SignatureException e){
+            LOGGER.info("[validateToken] SignatureException 발생");
+            return false;
+        }catch (ExpiredJwtException e){
+            LOGGER.info("[validateToken] ExpiredJwtException 발생");
+            return false;
+        }
+        catch (JwtException e) {
+            LOGGER.info("[validateToken] JwtException 발생");
+            return false;
+        }catch (IllegalArgumentException e){
+            LOGGER.info("[validateToken] IllegalArgumentException 발생");
+            return false;
+        }catch (Exception e){
             return false;
         }
     }

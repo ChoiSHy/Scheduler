@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                                 "/sign-api/exception").permitAll() // 패턴 해당 요청 모두 허용
                         .requestMatchers(HttpMethod.POST, "/user/**").permitAll()   // POST: /user/** 모두 허용
                         .requestMatchers("**exception**").permitAll()   // **exception** 모두 허용
-                        .anyRequest().hasRole("ADMIN"))    // 모든 요청 -> ADMIN
+                        .anyRequest().hasRole("USER"))    // 기타 요청 -> ADMIN
 
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .accessDeniedHandler(new CustomAccessDinedHandler())    // 권한 확인 예외

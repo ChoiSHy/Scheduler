@@ -23,15 +23,15 @@ public class UserServiceImpl implements UserService {
 
     public UserDetails loadUserByUsername(String username) {
         LOGGER.info("[loadUserByUsername] loadUserByUsername 수행. id: {}", username);
-        return userRepository.findByUid(username)
+        return userRepository.findByEmail(username)
                 .orElseThrow(()->new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다."));
     }
 
     @Override
     public UserResponseDto getUserByUid(UserRequestDto requestDto) {
-        LOGGER.info("[UserDetailService - getUserByUid] : ** START ** id: {}", requestDto.getId());
+        LOGGER.info("[UserDetailService - getUserByUid] : ** START ** id: {}", requestDto.getEmail());
 
-        User foundUser =  userRepository.findByUid(requestDto.getId())
+        User foundUser =  userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> {
                     LOGGER.error("[UserDetailService - getUserByUid] : ** cannot find that user **");
                     throw new NoSuchElementException("회원 정보를 찾을 수 없습니다.");
