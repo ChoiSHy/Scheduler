@@ -71,15 +71,13 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 시작");
         String username = this.getUsername(token);
-        LOGGER.info("[getAuthentication] 회원정보: {}", username);
         UserDetails userDetails = userService.loadUserByUsername(username);
-        LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 완료, UserDetails UserName : {}", userDetails.getUsername());
+        LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 완료");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // JWT 토큰에서 회원 구별 정보 추출
     public String getUsername(String token) {
-        LOGGER.info("[getUsername] 토큰 기반 회원 구별 정보 추출. token: {}",token);
         Claims claims = Jwts.parser()
                 .verifyWith(key).build()
                 .parseSignedClaims(token).getPayload();

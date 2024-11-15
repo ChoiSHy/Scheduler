@@ -29,20 +29,22 @@ public class SecurityConfiguration {
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(
-                                "/sign-api/sign-in",
-                                "/sign-api/sign-up",
-                                "/sign-api/exception").permitAll() // 패턴 해당 요청 모두 허용
-                        .requestMatchers(HttpMethod.POST, "/user/**").permitAll()   // POST: /user/** 모두 허용
-                        .requestMatchers("**exception**").permitAll()   // **exception** 모두 허용
-                        .anyRequest().hasRole("USER"))    // 기타 요청 -> ADMIN
+                        .requestMatchers("/sign-api/**").permitAll() // sign-api 관련 기능
+
+                        .requestMatchers(HttpMethod.POST, "/user/user-info").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/user/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/**").authenticated()
+                        
+                        .requestMatchers("**exception**").permitAll()   // exception 포함 모두 허용
+                        .anyRequest().permitAll()   // 기타 요청 허용
+                )
 
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .accessDeniedHandler(new CustomAccessDinedHandler())    // 권한 확인 예외
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))   // 인증 과정 예외
 
                 .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider),  //
+                        new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }

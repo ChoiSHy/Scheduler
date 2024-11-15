@@ -1,12 +1,17 @@
 package com.scheduler.scheduler.presentation.dto.sign;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scheduler.scheduler.domain.User.Role;
 import com.scheduler.scheduler.domain.User.User;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Date;
 
 @Getter
 @Builder
@@ -18,12 +23,15 @@ public class SignUpRequestDto {
             message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
     private String password;
     private String name;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthDate;
 
     public User toUser() {
         User user = User.builder()
                 .email(email)
                 .name(name)
                 .password(password)
+                .birthDate(birthDate)
                 .role(Role.USER)
                 .build();
         return user;

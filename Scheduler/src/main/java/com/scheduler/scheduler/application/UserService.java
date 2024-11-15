@@ -7,7 +7,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.NoSuchElementException;
 
-public interface UserService{
+public interface UserService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
-    UserResponseDto getUserByUid(UserRequestDto requestDto) throws NoSuchElementException;
+
+    UserResponseDto getUserByEmail(UserRequestDto requestDto) throws NoSuchElementException;
+
+    UserResponseDto getUser() throws NoSuchElementException;
 }

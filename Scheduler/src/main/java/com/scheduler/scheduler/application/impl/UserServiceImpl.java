@@ -8,6 +8,7 @@ import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserByUid(UserRequestDto requestDto) {
+    public UserResponseDto getUserByEmail(UserRequestDto requestDto) {
         LOGGER.info("[UserDetailService - getUserByUid] : ** START ** id: {}", requestDto.getEmail());
 
         User foundUser =  userRepository.findByEmail(requestDto.getEmail())
@@ -43,6 +44,16 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("[UserDetailService - getUserByUid] : User -> UserResponseDto");
 
         LOGGER.info("[UserDetailService - getUserByUid] : ** DONE **");
+        return responseDto;
+    }
+
+    @Override
+    public UserResponseDto getUser() throws NoSuchElementException {
+        LOGGER.info("[getUser] START -- 사용자 정보 불러오기 시작");
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(NoSuchElementException::new);
+        LOGGER.info("[getUser] Current User Email: {}", user.getEmail());
+        UserResponseDto responseDto = user.toResponseDto();
         return responseDto;
     }
 

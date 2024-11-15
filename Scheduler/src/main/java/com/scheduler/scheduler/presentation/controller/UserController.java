@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 
-@RestController(value = "/user")
+@RestController
+@RequestMapping(value = "/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -26,15 +27,23 @@ public class UserController {
             required = true,
             in = ParameterIn.HEADER
     )
-    public ResponseEntity<UserResponseDto> getUserByUid(@RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> getUserInfoByEmail(@RequestBody UserRequestDto requestDto) {
+        LOGGER.info("[getUserInfoByEmail - controller] : START");
         try {
-            UserResponseDto responseDto = userService.getUserByUid(requestDto);
+            UserResponseDto responseDto = userService.getUserByEmail(requestDto);
+            LOGGER.info("[getUserInfoByEmail - controller] : DONE");
             return ResponseEntity.ok().body(responseDto);
         }catch (NoSuchElementException ex){
+            LOGGER.error("[getUserInfoByEmail - controller] : NOT-FOUND");
             return ResponseEntity.notFound().build();
         }
     }
-
+    @RequestMapping(value = "/user-info/my-info", method = RequestMethod.GET)
+    public ResponseEntity<UserResponseDto> getMyUserInfo(){
+        LOGGER.info("[getMyUserInfo - controller]");
+        UserResponseDto responseDto = userService.getUser();
+        return ResponseEntity.ok(responseDto);
+    }
     @RequestMapping(value = "/user-info/modify", method = RequestMethod.PUT)
     public ResponseEntity<UserResponseDto> modifyUser(){
         return null;
