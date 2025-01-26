@@ -1,5 +1,6 @@
 package com.scheduler.scheduler.application;
 
+import com.scheduler.scheduler.presentation.dto.user.UserModifyRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,5 +13,8 @@ public interface UserService {
 
     UserResponseDto getUserByEmail(UserRequestDto requestDto) throws NoSuchElementException;
 
-    UserResponseDto getUser() throws NoSuchElementException;
+    UserResponseDto getMyUserInfo() throws NoSuchElementException;
+    UserResponseDto modifyMyUserInfo(UserModifyRequestDto requestDto);
+    void removeUserById(Long id);
+    void removeMyself();
 }

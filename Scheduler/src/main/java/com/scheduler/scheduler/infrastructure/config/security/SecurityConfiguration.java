@@ -29,13 +29,12 @@ public class SecurityConfiguration {
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/sign-api/**").permitAll() // sign-api 관련 기능
-
-                        .requestMatchers(HttpMethod.POST, "/user/user-info").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/user/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/user/**").authenticated()
-                        
-                        .requestMatchers("**exception**").permitAll()   // exception 포함 모두 허용
+                        .requestMatchers("/api/user/user-info/my-info").authenticated()
+                        //.requestMatchers("/sign-api/**").permitAll() // sign-api 관련 기능
+                        //.requestMatchers(HttpMethod.POST, "/user/user-info").hasRole("ADMIN")
+                        //.requestMatchers(HttpMethod.POST, "/user/**").authenticated()
+                        //.requestMatchers(HttpMethod.GET, "/user/**").authenticated()
+                        //.requestMatchers("**exception**").permitAll()   // exception 포함 모두 허용
                         .anyRequest().permitAll()   // 기타 요청 허용
                 )
 

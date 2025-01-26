@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -39,9 +39,15 @@ public class UserController {
         }
     }
     @RequestMapping(value = "/user-info/my-info", method = RequestMethod.GET)
+    @Parameter(
+            name="X-AUTH-TOKEN",
+            description = "로그인 후 발급 받은 access_token",
+            required = true,
+            in=ParameterIn.HEADER
+    )
     public ResponseEntity<UserResponseDto> getMyUserInfo(){
         LOGGER.info("[getMyUserInfo - controller]");
-        UserResponseDto responseDto = userService.getUser();
+        UserResponseDto responseDto = userService.getMyUserInfo();
         return ResponseEntity.ok(responseDto);
     }
     @RequestMapping(value = "/user-info/modify", method = RequestMethod.PUT)

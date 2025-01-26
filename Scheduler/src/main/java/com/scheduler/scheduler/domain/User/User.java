@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scheduler.scheduler.domain.Schedule.Schedule;
 import com.scheduler.scheduler.domain.Todo.Todo;
+import com.scheduler.scheduler.presentation.dto.user.UserModifyRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -114,7 +115,9 @@ public class User implements UserDetails {
         //return UserDetails.super.isEnabled();
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void modify(UserModifyRequestDto requestDto){
+        this.name = requestDto.getName();
+        this.birthDate = requestDto.getBirthDate();
+        this.password = requestDto.getPassword();
     }
 }
