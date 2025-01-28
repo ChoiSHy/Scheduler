@@ -38,8 +38,12 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    /** my-info **/
+    /**
+     * TODO: 1. 관리자 기준 수정
+     * TODO: 2. 관라자 기준 삭제
+     * TODO: 3. my-info 기능들 테스트(exception 포함)
+     * **/
+    /* my-info */
     /* 조회 */
     @RequestMapping(value = "/user-info/my-info", method = RequestMethod.GET)
     @Parameter(
@@ -54,6 +58,12 @@ public class UserController {
     }
     /* 수정 */
     @RequestMapping(value = "/user-info/my-info/modify", method = RequestMethod.PUT)
+    @Parameter(
+            name = "X-AUTH-TOKEN",
+            description = "로그인 후 발급 받은 access_token",
+            required = true,
+            in = ParameterIn.HEADER
+    )
     public ResponseEntity<UserResponseDto> modifyUserMyself(UserModifyRequestDto requestDto){
         try {
             UserResponseDto responseDto = userService.modifyMyUserInfo(requestDto);
@@ -64,8 +74,15 @@ public class UserController {
     }
     /* 삭제 */
     @RequestMapping(value = "/user-info/my-info/delete", method = RequestMethod.DELETE)
-    public ResponseEntity<UserResponseDto> deleteUserMyself(){
-        return null;
+    @Parameter(
+            name = "X-AUTH-TOKEN",
+            description = "로그인 후 발급 받은 access_token",
+            required = true,
+            in = ParameterIn.HEADER
+    )
+    public ResponseEntity<String> deleteUserMyself(){
+        userService.removeMyself();
+        return ResponseEntity.ok().body("회원정보 삭제 완료");
     }
 
 }

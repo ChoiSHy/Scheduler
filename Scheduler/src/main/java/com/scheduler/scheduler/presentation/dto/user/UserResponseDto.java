@@ -10,7 +10,7 @@ import java.util.Date;
 @Builder
 @Getter
 public class UserResponseDto {
-    String name;
-    String email;
-    Date birthDate;
+    private String name;
+    private String email;
+    private Date birthDate;
 }
