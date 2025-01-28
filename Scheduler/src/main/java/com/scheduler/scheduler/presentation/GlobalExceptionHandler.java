@@ -2,7 +2,9 @@ package com.scheduler.scheduler.presentation;
 
 import com.scheduler.scheduler.domain.exception.InaccessibleException;
 import com.scheduler.scheduler.domain.exception.IncorrectSignInException;
+import com.scheduler.scheduler.domain.exception.NonSignInException;
 import com.scheduler.scheduler.presentation.dto.sign.ExceptionMessage;
+import org.apache.catalina.authenticator.NonLoginAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +25,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = IncorrectSignInException.class)
-    public ResponseEntity<ExceptionMessage> ExceptionHandler(InaccessibleException e) {
+    public ResponseEntity<ExceptionMessage> IncorrectSignInExceptionHandler(InaccessibleException e) {
         LOGGER.error("ExceptionHandler 호출, {}, {}", e.getCause(), e.getMessage());
+        return generateResponseEntity();
+    }
+    @ExceptionHandler(value = NonSignInException.class)
+    public ResponseEntity<ExceptionMessage> NonSignInExceptionHandler(NonSignInException e){
+        LOGGER.error("ExceptionHandler 호출, {}, {}",e.getCause(), e.getMessage());
         return generateResponseEntity();
     }
 

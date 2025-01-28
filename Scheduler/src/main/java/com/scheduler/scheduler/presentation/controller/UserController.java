@@ -1,6 +1,8 @@
 package com.scheduler.scheduler.presentation.controller;
 
 import com.scheduler.scheduler.application.UserService;
+import com.scheduler.scheduler.domain.exception.NonSignInException;
+import com.scheduler.scheduler.presentation.dto.user.UserModifyRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,16 +30,17 @@ public class UserController {
             in = ParameterIn.HEADER
     )
     public ResponseEntity<UserResponseDto> getUserInfoByEmail(@RequestBody UserRequestDto requestDto) {
-        LOGGER.info("[getUserInfoByEmail - controller] : START");
         try {
             UserResponseDto responseDto = userService.getUserByEmail(requestDto);
-            LOGGER.info("[getUserInfoByEmail - controller] : DONE");
             return ResponseEntity.ok().body(responseDto);
         }catch (NoSuchElementException ex){
             LOGGER.error("[getUserInfoByEmail - controller] : NOT-FOUND");
             return ResponseEntity.notFound().build();
         }
     }
+
+    /** my-info **/
+    /* 조회 */
     @RequestMapping(value = "/user-info/my-info", method = RequestMethod.GET)
     @Parameter(
             name="X-AUTH-TOKEN",
@@ -46,16 +49,22 @@ public class UserController {
             in=ParameterIn.HEADER
     )
     public ResponseEntity<UserResponseDto> getMyUserInfo(){
-        LOGGER.info("[getMyUserInfo - controller]");
         UserResponseDto responseDto = userService.getMyUserInfo();
         return ResponseEntity.ok(responseDto);
     }
-    @RequestMapping(value = "/user-info/modify", method = RequestMethod.PUT)
-    public ResponseEntity<UserResponseDto> modifyUser(){
-        return null;
+    /* 수정 */
+    @RequestMapping(value = "/user-info/my-info/modify", method = RequestMethod.PUT)
+    public ResponseEntity<UserResponseDto> modifyUserMyself(UserModifyRequestDto requestDto){
+        try {
+            UserResponseDto responseDto = userService.modifyMyUserInfo(requestDto);
+            return ResponseEntity.ok(responseDto);
+        }catch (NonSignInException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
-    @RequestMapping(value = "/user-info/modify/password", method = RequestMethod.PUT)
-    public ResponseEntity<UserResponseDto> modifyPassword(){
+    /* 삭제 */
+    @RequestMapping(value = "/user-info/my-info/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<UserResponseDto> deleteUserMyself(){
         return null;
     }
 

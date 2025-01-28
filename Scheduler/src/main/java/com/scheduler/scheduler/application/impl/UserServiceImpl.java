@@ -2,6 +2,7 @@ package com.scheduler.scheduler.application.impl;
 
 import com.scheduler.scheduler.application.UserService;
 import com.scheduler.scheduler.domain.User.User;
+import com.scheduler.scheduler.domain.exception.NonSignInException;
 import com.scheduler.scheduler.infrastructure.repository.UserRepository;
 import com.scheduler.scheduler.presentation.dto.user.UserModifyRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserRequestDto;
@@ -9,6 +10,8 @@ import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,8 +33,12 @@ public class UserServiceImpl implements UserService {
     }
 
     // 현재 로그인 된 계정의 정보 가져오기
-    private User getUserFromContext() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private User getUserFromContext() throws NoSuchElementException{
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null|| authentication instanceof AnonymousAuthenticationToken)
+            throw new NonSignInException();
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         return userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> {
             LOGGER.info("[getUserFromContext] : cannot find user");
