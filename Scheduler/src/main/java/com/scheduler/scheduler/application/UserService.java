@@ -1,8 +1,10 @@
 package com.scheduler.scheduler.application;
 
-import com.scheduler.scheduler.presentation.dto.user.UserModifyRequestDto;
-import com.scheduler.scheduler.presentation.dto.user.UserRequestDto;
-import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
+import com.scheduler.scheduler.presentation.dto.user.modify.AdminUserInfoModifyRequestDto;
+import com.scheduler.scheduler.presentation.dto.user.modify.MyUserInfoModifyRequestDto;
+import com.scheduler.scheduler.presentation.dto.user.modify.UserInfoModifyRequestDto;
+import com.scheduler.scheduler.presentation.dto.user.UserInfoRequestDto;
+import com.scheduler.scheduler.presentation.dto.user.UserInfoResponseDto;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -10,11 +12,10 @@ import java.util.NoSuchElementException;
 
 public interface UserService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
-
-    UserResponseDto getUserByEmail(UserRequestDto requestDto) throws NoSuchElementException;
-
-    UserResponseDto getMyUserInfo() throws NoSuchElementException;
-    UserResponseDto modifyMyUserInfo(UserModifyRequestDto requestDto);
+    UserInfoResponseDto getUserByEmail(UserInfoRequestDto requestDto) throws NoSuchElementException;
+    UserInfoResponseDto modifyUserInfoByEmail(AdminUserInfoModifyRequestDto requestDto);
     void removeUserById(Long id);
+    UserInfoResponseDto getMyUserInfo() throws NoSuchElementException;
+    UserInfoResponseDto modifyMyUserInfo(MyUserInfoModifyRequestDto requestDto);
     void removeMyself();
 }

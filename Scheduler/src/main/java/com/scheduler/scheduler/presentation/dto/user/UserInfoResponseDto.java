@@ -9,7 +9,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-public class UserResponseDto {
+public class UserInfoResponseDto {
     private String name;
     private String email;
     private Date birthDate;

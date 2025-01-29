@@ -4,21 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scheduler.scheduler.domain.Schedule.Schedule;
 import com.scheduler.scheduler.domain.Todo.Todo;
-import com.scheduler.scheduler.presentation.dto.user.UserModifyRequestDto;
-import com.scheduler.scheduler.presentation.dto.user.UserResponseDto;
+import com.scheduler.scheduler.presentation.dto.user.UserInfoResponseDto;
+import com.scheduler.scheduler.presentation.dto.user.modify.UserInfoModifyRequestDto;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -58,8 +53,8 @@ public class User implements UserDetails {
         return this.email;
     }
 
-    public UserResponseDto toResponseDto() {
-        return UserResponseDto.builder()
+    public UserInfoResponseDto toResponseDto() {
+        return UserInfoResponseDto.builder()
                 .email(email)
                 .name(name)
                 .birthDate(birthDate)
@@ -115,7 +110,7 @@ public class User implements UserDetails {
         //return UserDetails.super.isEnabled();
     }
 
-    public void modify(UserModifyRequestDto requestDto){
+    public void modify(UserInfoModifyRequestDto requestDto){
         this.name = requestDto.getName();
         this.birthDate = requestDto.getBirthDate();
         this.password = requestDto.getPassword();
