@@ -14,7 +14,7 @@ public interface UserService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
     UserInfoResponseDto getUserByEmail(UserInfoRequestDto requestDto) throws NoSuchElementException;
     UserInfoResponseDto modifyUserInfoByEmail(AdminUserInfoModifyRequestDto requestDto);
-    void removeUserById(Long id);
+    void removeUserByEmail(UserInfoRequestDto requestDto);
     UserInfoResponseDto getMyUserInfo() throws NoSuchElementException;
     UserInfoResponseDto modifyMyUserInfo(MyUserInfoModifyRequestDto requestDto);
     void removeMyself();

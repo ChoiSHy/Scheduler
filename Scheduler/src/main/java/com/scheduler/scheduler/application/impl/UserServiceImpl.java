@@ -49,20 +49,20 @@ public class UserServiceImpl implements UserService {
     @Override
     // 관리자가 이메일로 사용자 정보 접근
     public UserInfoResponseDto getUserByEmail(UserInfoRequestDto requestDto) {
-        LOGGER.info("[UserDetailService - getUserByUid] : ** START ** id: {}", requestDto.getEmail());
+        LOGGER.info("[getUserByEmail] : ** START ** id: {}", requestDto.getEmail());
 
         User foundUser = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> {
-                    LOGGER.error("[UserDetailService - getUserByUid] : ** cannot find that user **");
+                    LOGGER.error("[getUserByEmail] : ** cannot find that user **");
                     throw new NoSuchElementException("회원 정보를 찾을 수 없습니다.");
                 });
 
-        LOGGER.info("[UserDetailService - getUserByUid] : finding success - " + foundUser);
+        LOGGER.info("[getUserByEmail] : finding success - " + foundUser);
 
         UserInfoResponseDto responseDto = foundUser.toResponseDto();
-        LOGGER.info("[UserDetailService - getUserByUid] : User -> UserResponseDto");
+        LOGGER.info("[getUserByEmail] : User -> UserResponseDto");
 
-        LOGGER.info("[UserDetailService - getUserByUid] : ** DONE **");
+        LOGGER.info("[getUserByEmail] : ** DONE **");
         return responseDto;
     }
     @Override
@@ -70,15 +70,25 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("[modifyUserInfoByEmail] : -- START --");
 
         User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow();
+                .orElseThrow(NoSuchElementException::new);
+        user.modify(requestDto);
+
+        User savedUser = userRepository.save(user);
+        UserInfoResponseDto responseDto = savedUser.toResponseDto();
+        LOGGER.info("[modifyUserInfoByEmail] : modified user = {}",responseDto);
+
         LOGGER.info("[modifyUserInfoByEmail] : -- DONE --");
-        return null;
+        return responseDto;
     }
 
     @Override
-    public void removeUserById(Long id) {
+    public void removeUserByEmail(UserInfoRequestDto requestDto) {
         LOGGER.info("[removeUserById] : -- START --");
-        userRepository.deleteById(id);
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                        .orElseThrow(NoSuchElementException::new);
+        LOGGER.info("[removeUserById] : user = {}", user);
+        userRepository.delete(user);
+        LOGGER.info("[removeUserById] : delete complete");
         LOGGER.info("[removeUserById] : -- DONE --");
     }
 /* my-info */
