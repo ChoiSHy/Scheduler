@@ -3,22 +3,19 @@ package com.scheduler.scheduler.presentation.controller;
 import com.scheduler.scheduler.application.SignService;
 import com.scheduler.scheduler.domain.exception.InaccessibleException;
 import com.scheduler.scheduler.presentation.dto.sign.*;
+import com.scheduler.scheduler.presentation.dto.sign.password.PasswordChangeRequestDto;
+import com.scheduler.scheduler.presentation.dto.sign.password.PasswordResponseDto;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sign-api")
+@RequestMapping("/api/sign/")
 public class SignController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SignController.class);;
@@ -40,6 +37,16 @@ public class SignController {
         LOGGER.info("[signUp] 회원가입을 완료했습니다. id: {}",requestDto.getEmail());
 
         return resultDto;
+    }
+    @PutMapping(value = "/password")
+    public ResponseEntity<PasswordResponseDto> changePassword(@RequestBody PasswordChangeRequestDto requestDto){
+        PasswordResponseDto responseDto = signService.changePasswordMyself(requestDto);
+        return ResponseEntity.ok().body(responseDto);
+    }
+    @GetMapping(value = "/password")
+    public ResponseEntity<PasswordResponseDto> resetPassword(){
+        PasswordResponseDto responseDto = signService.resetPasswordMyself();
+        return ResponseEntity.ok().body(responseDto);
     }
     @GetMapping(value = "/exception")
     public void exceptionTest() throws InaccessibleException{

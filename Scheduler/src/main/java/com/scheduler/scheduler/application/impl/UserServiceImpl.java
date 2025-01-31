@@ -119,7 +119,6 @@ public class UserServiceImpl implements UserService {
         return responseDto;
     }
 
-
     @Override
     public void removeMyself() {
         LOGGER.info("[removeMyself] : -- START --");

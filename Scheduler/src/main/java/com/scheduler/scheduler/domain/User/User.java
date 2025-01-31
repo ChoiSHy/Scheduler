@@ -113,6 +113,9 @@ public class User implements UserDetails {
     public void modify(UserInfoModifyRequestDto requestDto){
         this.name = requestDto.getName();
         this.birthDate = requestDto.getBirthDate();
-        this.password = requestDto.getPassword();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -7,5 +7,4 @@ import java.util.Date;
 public abstract class UserInfoModifyRequestDto {
     private String name;
     private Date BirthDate;
-    private String password;
 }

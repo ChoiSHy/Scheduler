@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 /**
- * TODO: 1. 수정 기능 중 비밀번호 변경 기능은 따로 분리
+
  * TODO: 2. my-info 기능들 테스트(exception 포함)
  * TODO: 3. admin 기능 test 필요
  * TODO: 4. ExceptionHandler 가 이미 존재하는데 따로 try/catch 문을 유지해야하는지.
@@ -29,6 +29,7 @@ public class UserController {
     private final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     /* admin 기능 */
+    // 조회
     @RequestMapping(value = "/user-info", method = RequestMethod.POST)
     @Parameter(
             name = "X-AUTH-TOKEN",
@@ -45,7 +46,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    // 수정
     @RequestMapping(value = "/user-info", method = RequestMethod.PUT)
     @Parameter(
             name = "X-AUTH-TOKEN",
@@ -61,7 +62,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    //삭제
     @RequestMapping(value = "/user-info", method = RequestMethod.DELETE)
     @Parameter(
             name = "X-AUTH-TOKEN",
@@ -109,7 +110,6 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
-
     /* 삭제 */
     @RequestMapping(value = "/user-info/my-info", method = RequestMethod.DELETE)
     @Parameter(

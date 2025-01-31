@@ -2,7 +2,6 @@ package com.scheduler.scheduler.application;
 
 import com.scheduler.scheduler.presentation.dto.user.modify.AdminUserInfoModifyRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.modify.MyUserInfoModifyRequestDto;
-import com.scheduler.scheduler.presentation.dto.user.modify.UserInfoModifyRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserInfoRequestDto;
 import com.scheduler.scheduler.presentation.dto.user.UserInfoResponseDto;
 import org.springframework.security.core.userdetails.UserDetails;
