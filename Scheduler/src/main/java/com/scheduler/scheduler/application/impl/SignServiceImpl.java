@@ -3,6 +3,7 @@ package com.scheduler.scheduler.application.impl;
 import com.scheduler.scheduler.application.SignService;
 import com.scheduler.scheduler.domain.User.User;
 import com.scheduler.scheduler.domain.exception.IncorrectSignInException;
+import com.scheduler.scheduler.domain.exception.NonSignInException;
 import com.scheduler.scheduler.infrastructure.config.security.CommonResponse;
 import com.scheduler.scheduler.infrastructure.config.security.JwtTokenProvider;
 import com.scheduler.scheduler.infrastructure.repository.UserRepository;
@@ -12,6 +13,10 @@ import com.scheduler.scheduler.presentation.dto.sign.password.PasswordResponseDt
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +24,10 @@ import java.security.SecureRandom;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
+/*
+ * TODO: 1. 수정 기능 중 비밀번호 변경 기능은 따로 분리
+ * TODO: 1.1. 비밀번호 로직 변경 고민
+ * */
 @Service
 @RequiredArgsConstructor
 public class SignServiceImpl implements SignService {
@@ -42,12 +51,12 @@ public class SignServiceImpl implements SignService {
 
     public SignUpResultDto signUp(SignUpRequestDto requestDto) {
         LOGGER.info("[signUp] email 중복여부 확인");
-        
+
         LOGGER.info("[signUp] 회원 가입 정보 전달");
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User user = requestDto.toUser();
         LOGGER.info("[signUp] user: {}", user);
-        
+
         User savedUser = userRepository.save(user);
         SignUpResultDto signUpResultDto = new SignUpResultDto();
 
@@ -71,9 +80,10 @@ public class SignServiceImpl implements SignService {
 
 
         user = userRepository.findByEmail(email)
-                .orElseThrow(()->{
+                .orElseThrow(() -> {
                     LOGGER.error("[signIn] 해당 유저 정보를 찾을 수 없습니다.");
-                    throw new NoSuchElementException("해당 유저 정보를 찾을 수 없습니다.");});
+                    throw new NoSuchElementException("해당 유저 정보를 찾을 수 없습니다.");
+                });
 
         LOGGER.info("[signIn] user: {}", user);
 
@@ -103,30 +113,53 @@ public class SignServiceImpl implements SignService {
 
     @Override
     public PasswordResponseDto resetPasswordMyself() {
-        /*
-         * TODO: 1. 수정 기능 중 비밀번호 변경 기능은 따로 분리
-         * TODO: 1.1. 비밀번호 로직 변경 고민
-        * */
-        return null;
-    }
-    private String getRandomPassword(int length){
-        SecureRandom random = new SecureRandom();
+        LOGGER.info("[resetPasswordMyself] : -- START --");
 
+        User user = getUserFromContext();
+        LOGGER.info("[resetPasswordMyself] : generate new password");
+        String newPassword = getRandomPassword(8);
+        LOGGER.info("[resetPasswordMyself] : generate complete");
+        user.setPassword(newPassword);
+        User savedUser = userRepository.save(user);
+        LOGGER.info("[resetPasswordMyself] : save complete");
+
+        PasswordResponseDto responseDto = new PasswordResponseDto("reset success");
+        LOGGER.info("[resetPasswordMyself] : -- DONE --");
+
+        return responseDto;
+    }
+
+    private User getUserFromContext() throws NoSuchElementException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken)
+            throw new NonSignInException();
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        return userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> {
+            LOGGER.error("[getUserFromContext] : cannot find user");
+            throw new NoSuchElementException();
+        });
+    }
+
+    private String getRandomPassword(int length) {
+        SecureRandom random = new SecureRandom();
+        String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}";
+        String randomPassword=null;
         int rndAllCharsLength = rndAllCharacters.length;
-        while(true) {
+
+        for (int j = 0; j < 10; j++) {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++)
                 sb.append(rndAllCharacters[random.nextInt(rndAllCharsLength)]);
-            }
-            String randomPassword = sb.toString();
 
-            String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}";
+            randomPassword = sb.toString();
 
             if (Pattern.matches(pattern, randomPassword))
-                return randomPassword;
+                break;
         }
-
+        return randomPassword;
     }
 
     private void setSuccessResult(SignUpResultDto result) {

@@ -4,5 +4,5 @@ import lombok.AllArgsConstructor;
 import lombok.Setter;
 @AllArgsConstructor
 public class PasswordResponseDto {
-    String password;
+    String msg;
 }
